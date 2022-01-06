@@ -1,33 +1,25 @@
+{ nixpkgs, pkgs }:
 let
-  sources = import ./nix/sources.nix;
-  nixpkgs = sources.nixpkgs;
-  pkgs = import nixpkgs {};
+  system = "x86_64-linux";
+  machine = import ./machine.nix { inherit pkgs nixpkgs; };
 in
 {
-  inherit nixpkgs;
-  machine = { cfg, ...}: {
-    nixek-ci = {
-      type = "aws";
+  jobs = {
+    demo-job = { info }: {
+      inherit machine;
 
-      awsConf = {
-        rootVolumeSizeGiB = 40;
-        instanceType = "t3.small";
-      };
+      steps = [
+        {
+          name = "Checkout";
+          type = "checkout";
+        }
+        {
+          name = "Print the discordian date";
+          command = ''
+            echo "The discordian date is $(ddate)"
+          '';
+        }
+      ];
     };
-    environment.systemPackages = with pkgs; [
-      ddate
-    ];
-  };
-  ci = { info }: {
-    demo.steps = [
-      {
-        name = "Checkout";
-        type = "checkout";
-      }
-      {
-        name = "Print the discordian date";
-        command = "The discordian date is $(ddate)";
-      }
-    ];
   };
 }
