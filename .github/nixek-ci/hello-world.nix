@@ -11,16 +11,14 @@ in
       steps = [
         {
           name = "Print the discordian date";
-          command = ''
-            echo "The discordian date is $(ddate)"
-          '';
+          command = [ "/bin/sh" "-c" ''echo "The discordian date is $(ddate)"'' ];
         }
         {
           name = "print hello world";
           # TODO: can we mark commands as pure and do some clever stuff here?
           # TBD, this is just here as a reminder for me.
           # pure = true;
-          command = ''echo "hello world"'';
+          command = [ "echo" "hello world" ];
         }
       ];
     };
