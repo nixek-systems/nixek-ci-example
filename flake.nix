@@ -2,15 +2,18 @@
   description = "A CI example project";
 
   inputs = {
-    nixek.url = "github:nixek-systems/pkgs";
+    nixekcid.url = "path:/home/esk/dev/nixek-ci/monorepo";
   };
 
-  outputs = { self, nixpkgs, nixek }:
+  outputs = { self, nixpkgs, nixekcid }:
   let
+    system = "x86_64-linux";
     pkgs = import nixpkgs {
-      system = "x86_64-linux";
+      inherit system;
       overlays = [
-        nixek.overlay
+        (final: prev: {
+          nixekcid = nixekcid.packages."${system}".nixekcid;
+        })
       ];
     };
   in

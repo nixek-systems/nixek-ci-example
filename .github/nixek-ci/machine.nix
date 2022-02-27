@@ -30,7 +30,7 @@ let
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.nixekcid} run-job --user nixek";
+        ExecStart = "${pkgs.nixekcid}/bin/nixek-ci-agent run-job --user nixek";
       };
     };
   };
@@ -47,18 +47,34 @@ let
   qemuImage = ((import "${nixpkgs}/nixos/lib/make-disk-image.nix") {
     inherit pkgs lib;
 
-    diskSize = 40 * 1024;
+    diskSize = 20 * 1024;
+    format = "qcow2";
 
     config = (evalConfig {
       system = "x86_64-linux";
       modules = [
         ({
           imports = [
-            "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
             "${nixpkgs}/nixos/modules/profiles/qemu-guest.nix"
           ];
+
+          fileSystems."/" = {
+            device = "/dev/disk/by-label/nixos";
+            fsType = "ext4";
+            autoResize = true;
+          };
+
+          boot.growPartition = true;
+          boot.kernelParams = [ "console=ttyS0" ];
+          boot.loader.grub.device = "/dev/vda";
+          boot.loader.timeout = 0;
+
+          # insecure, todo do better
+          services.getty.autologinUser = "root";
         })
         sharedConfig
+
+
       ];
     }).config;
   });
