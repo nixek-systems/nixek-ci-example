@@ -40,7 +40,7 @@ let
         format = "raw";
         sizeMB = 16 * 1024;
       };
-      modules = [ (sharedConfig { inherit config; }) ];
+      imports = [ (sharedConfig { inherit config; }) ];
     };
   }).amazonImage.x86_64-linux;
 
