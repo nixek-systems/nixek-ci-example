@@ -17,6 +17,21 @@ qemu-img create -b ./base-image/nixos.qcow2 -F qcow2 -f qcow2 ./local-run.qcow2
 
 trap 'rm -f ./local-run.qcow2' EXIT
 
-qemu-kvm -drive file=./local-run.qcow2,if=virtio -nographic
+# Make the config
+mkdir -p mnt
+cat > mnt/config.json <<EOF
+{
+  "name": "demo-job",
+  "commit": "main",
+  "ref_": "main",
+  "repo": "/mnt/nixos-config/example-project",
+  "root": "/tmp/nixekcid"
+}
+EOF
+
+
+qemu-kvm -drive file=./local-run.qcow2,if=virtio \
+  -fsdev local,security_model=passthrough,id=fsdev0,path=$(pwd)/mnt -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=nixek-config \
+  -nographic
 
 # TODO: actually do ci stuff I guess

@@ -73,7 +73,7 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "narHash": "sha256-SpvHwhoJsvETxCy9BZLrqB9wHBgGz+iu2dGIbQ8diso=",
+        "narHash": "sha256-eLbLuptMPbEEdXAnSqcCN9DJ3D8DYyGBfe0o/DQ1zXQ=",
         "path": "/home/esk/dev/nixek-ci/monorepo",
         "type": "path"
       },

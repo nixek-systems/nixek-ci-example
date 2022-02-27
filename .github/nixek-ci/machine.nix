@@ -30,7 +30,7 @@ let
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.nixekcid}/bin/nixek-ci-agent run-job --user nixek";
+        ExecStart = "${pkgs.nixekcid}/bin/nixek-ci-agent run-job";
       };
     };
   };
@@ -49,6 +49,7 @@ let
 
     diskSize = 20 * 1024;
     format = "qcow2";
+    copyChannel = false;
 
     config = (evalConfig {
       system = "x86_64-linux";
